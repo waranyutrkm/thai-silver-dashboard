@@ -1,10 +1,10 @@
 {
-  "ts": 1788700802787,
+  "ts": 1788700802784,
   "market": {
     "spotUsdOz": 66.2193,
     "fx": 32.92,
     "spotBase": 70.0866777697341,
-    "ts": 1788700802787,
+    "ts": 1788700802784,
     "spotChangePct": -0.013431,
     "spotSource": "goldprice.org",
     "fxSource": "frankfurter.app",
@@ -33,7 +33,7 @@
         "id": "spot_xag",
         "last": 66.2193,
         "currency": "USD",
-        "ts": 1788700785991,
+        "ts": 1788700795993,
         "ok": true
       }
     },
@@ -43,21 +43,25 @@
       "type": "futures",
       "url": "https://www.tfex.co.th/en/products/precious-metal/silver-online-futures/market-data",
       "note": "ฟิวเจอร์สเงินในไทย (ในกำกับ ก.ล.ต.) · ดีเลย์ 15 นาที · เดือนใกล้สุด · มี contango เวลาถือยาว",
-      "bidBase": null,
-      "askBase": null,
-      "askBaseEff": null,
-      "bidBaseEff": null,
+      "bidBase": 70.3732,
+      "askBase": 70.4049,
+      "askBaseEff": 70.4049,
+      "bidBaseEff": 70.3732,
       "vatApplicable": false,
-      "premiumBuy": null,
-      "premiumSell": null,
-      "spreadPct": null,
+      "premiumBuy": 0.0045,
+      "premiumSell": 0.0041,
+      "spreadPct": 0.0005,
       "mid": false,
       "feeBuyOncePct": 0.0015,
       "feeAnnualPct": 0.07,
       "native": {
         "id": "tfex_svf",
-        "ok": false,
-        "error": "ดึง TFEX ไม่ได้ (headless browser)"
+        "bid": 66.49,
+        "ask": 66.52,
+        "last": 66.49,
+        "currency": "USD",
+        "ts": 1788552305586,
+        "ok": true
       }
     },
     {
@@ -104,7 +108,7 @@
         "id": "etf_slv",
         "last": 59.994685800000006,
         "currency": "USD",
-        "ts": 1788700785991,
+        "ts": 1788700795993,
         "ok": true,
         "stale": true
       }
@@ -130,7 +134,7 @@
         "id": "etf_sivr",
         "last": 62.9745543,
         "currency": "USD",
-        "ts": 1788700785991,
+        "ts": 1788700795993,
         "ok": true,
         "stale": true
       }
@@ -157,7 +161,7 @@
         "bid": 68850,
         "ask": 70350,
         "currency": "THB",
-        "ts": 1788700802993,
+        "ts": 1788700802945,
         "ok": true
       }
     },
