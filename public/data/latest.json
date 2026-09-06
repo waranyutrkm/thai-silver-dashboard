@@ -1,10 +1,10 @@
 {
-  "ts": 1788699602739,
+  "ts": 1788700802787,
   "market": {
     "spotUsdOz": 66.2193,
     "fx": 32.92,
     "spotBase": 70.0866777697341,
-    "ts": 1788699602739,
+    "ts": 1788700802787,
     "spotChangePct": -0.013431,
     "spotSource": "goldprice.org",
     "fxSource": "frankfurter.app",
@@ -33,7 +33,7 @@
         "id": "spot_xag",
         "last": 66.2193,
         "currency": "USD",
-        "ts": 1788699575883,
+        "ts": 1788700785991,
         "ok": true
       }
     },
@@ -43,25 +43,21 @@
       "type": "futures",
       "url": "https://www.tfex.co.th/en/products/precious-metal/silver-online-futures/market-data",
       "note": "ฟิวเจอร์สเงินในไทย (ในกำกับ ก.ล.ต.) · ดีเลย์ 15 นาที · เดือนใกล้สุด · มี contango เวลาถือยาว",
-      "bidBase": 70.3732,
-      "askBase": 70.4049,
-      "askBaseEff": 70.4049,
-      "bidBaseEff": 70.3732,
+      "bidBase": null,
+      "askBase": null,
+      "askBaseEff": null,
+      "bidBaseEff": null,
       "vatApplicable": false,
-      "premiumBuy": 0.0045,
-      "premiumSell": 0.0041,
-      "spreadPct": 0.0005,
+      "premiumBuy": null,
+      "premiumSell": null,
+      "spreadPct": null,
       "mid": false,
       "feeBuyOncePct": 0.0015,
       "feeAnnualPct": 0.07,
       "native": {
         "id": "tfex_svf",
-        "bid": 66.49,
-        "ask": 66.52,
-        "last": 66.49,
-        "currency": "USD",
-        "ts": 1788552305586,
-        "ok": true
+        "ok": false,
+        "error": "ดึง TFEX ไม่ได้ (headless browser)"
       }
     },
     {
@@ -70,23 +66,21 @@
       "type": "futures",
       "url": "https://finance.yahoo.com/quote/SI=F",
       "note": "ฟิวเจอร์สเงินตลาดโลก (COMEX) · เดือนใกล้สุด · มี contango เวลาถือยาว",
-      "bidBase": 70.6463,
-      "askBase": 70.6463,
-      "askBaseEff": 70.6463,
-      "bidBaseEff": 70.6463,
+      "bidBase": null,
+      "askBase": null,
+      "askBaseEff": null,
+      "bidBaseEff": null,
       "vatApplicable": false,
-      "premiumBuy": 0.008,
-      "premiumSell": 0.008,
+      "premiumBuy": null,
+      "premiumSell": null,
       "spreadPct": null,
-      "mid": true,
+      "mid": false,
       "feeBuyOncePct": 0.006,
       "feeAnnualPct": 0.06,
       "native": {
         "id": "comex_si",
-        "last": 66.748,
-        "currency": "USD",
-        "ts": 1788555595000,
-        "ok": true
+        "ok": false,
+        "error": "ดึง Yahoo SI=F ไม่ได้"
       }
     },
     {
@@ -95,23 +89,24 @@
       "type": "etf",
       "url": "https://www.ishares.com/us/products/239855/",
       "note": "ETF อิงเงินจริง · ค่าธรรมเนียม 0.50%/ปี · ซื้อผ่านโบรกหุ้น US",
-      "bidBase": 69.8826,
-      "askBase": 69.8826,
-      "askBaseEff": 69.8826,
-      "bidBaseEff": 69.8826,
+      "bidBase": 70.0867,
+      "askBase": 70.0867,
+      "askBaseEff": 70.0867,
+      "bidBaseEff": 70.0867,
       "vatApplicable": false,
-      "premiumBuy": -0.0029,
-      "premiumSell": -0.0029,
+      "premiumBuy": 0,
+      "premiumSell": 0,
       "spreadPct": null,
       "mid": true,
       "feeBuyOncePct": 0.007,
       "feeAnnualPct": 0.005,
       "native": {
         "id": "etf_slv",
-        "last": 59.82,
+        "last": 59.994685800000006,
         "currency": "USD",
-        "ts": 1788552000000,
-        "ok": true
+        "ts": 1788700785991,
+        "ok": true,
+        "stale": true
       }
     },
     {
@@ -120,23 +115,24 @@
       "type": "etf",
       "url": "https://www.abrdn.com/en-us/investor/products/etfs/sivr",
       "note": "ETF อิงเงินจริง · ค่าธรรมเนียม 0.30%/ปี · ซื้อผ่านโบรกหุ้น US",
-      "bidBase": 70.0148,
-      "askBase": 70.0148,
-      "askBaseEff": 70.0148,
-      "bidBaseEff": 70.0148,
+      "bidBase": 70.0867,
+      "askBase": 70.0867,
+      "askBaseEff": 70.0867,
+      "bidBaseEff": 70.0867,
       "vatApplicable": false,
-      "premiumBuy": -0.001,
-      "premiumSell": -0.001,
+      "premiumBuy": 0,
+      "premiumSell": 0,
       "spreadPct": null,
       "mid": true,
       "feeBuyOncePct": 0.007,
       "feeAnnualPct": 0.003,
       "native": {
         "id": "etf_sivr",
-        "last": 62.91,
+        "last": 62.9745543,
         "currency": "USD",
-        "ts": 1788552000000,
-        "ok": true
+        "ts": 1788700785991,
+        "ok": true,
+        "stale": true
       }
     },
     {
@@ -161,7 +157,7 @@
         "bid": 68850,
         "ask": 70350,
         "currency": "THB",
-        "ts": 1788699602939,
+        "ts": 1788700802993,
         "ok": true
       }
     },
