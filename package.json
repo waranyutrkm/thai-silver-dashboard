@@ -1,0 +1,26 @@
+{
+  "name": "silver-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Dashboard เปรียบเทียบราคาเนื้อเงินในไทย (cross-asset, ฐานเดียว บาท/กรัมเนื้อเงินบริสุทธิ์)",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "start": "tsx src/server.ts",
+    "snapshot": "tsx src/snapshot.ts",
+    "test": "tsx src/normalize.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "node-cron": "^3.0.3",
+    "playwright-core": "^1.63.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.10.0",
+    "@types/node-cron": "^3.0.11",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

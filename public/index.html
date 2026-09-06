@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>เทียบราคาเนื้อเงินในไทย</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --ink: #14181f; --muted: #6b7280;
+    --line: #e5e7eb; --accent: #2563eb; --accent-soft: #eff4ff;
+    --good: #087443; --good-bg: #e7f6ee; --warn: #b45309; --bench: #fff8e1;
+    --shadow: 0 1px 2px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.04);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e1116; --card: #171b22; --ink: #e6e9ee; --muted: #9aa4b2;
+      --line: #262c36; --accent: #6ea8fe; --accent-soft: #1a2333;
+      --good: #48c98a; --good-bg: #12291f; --warn: #d9932b; --bench: #2a2410;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.3);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "IBM Plex Sans Thai", "Sarabun", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1.45;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 20px 16px 64px; }
+  h1 { font-size: 22px; margin: 0 0 2px; letter-spacing: -.01em; }
+  h2 { font-size: 17px; margin: 26px 0 10px; }
+  .sub { color: var(--muted); font-size: 13px; margin: 0 0 18px; }
+
+  .market { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px; margin-bottom: 16px; }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 12px 14px; box-shadow: var(--shadow); }
+  .stat .k { font-size: 12px; color: var(--muted); }
+  .stat .v { font-size: 20px; font-weight: 650; font-variant-numeric: tabular-nums; }
+  .stat .u { font-size: 12px; color: var(--muted); }
+
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
+  .seg { display: inline-flex; background: var(--card); border: 1px solid var(--line);
+    border-radius: 10px; overflow: hidden; }
+  .seg button { border: 0; background: transparent; color: var(--ink); padding: 7px 12px; font: inherit; cursor: pointer; }
+  .seg button.on { background: var(--accent); color: #fff; }
+  .toggle { display: inline-flex; align-items: center; gap: 7px; background: var(--card);
+    border: 1px solid var(--line); border-radius: 10px; padding: 6px 11px; cursor: pointer; user-select: none; font-size: 14px; }
+  .btn { background: var(--card); border: 1px solid var(--line); color: var(--ink);
+    border-radius: 10px; padding: 7px 12px; font: inherit; cursor: pointer; text-decoration: none; display: inline-block; }
+  .btn:hover { border-color: var(--accent); }
+  .btn.p { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .spacer { flex: 1; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .chip { border: 1px solid var(--line); background: var(--card); color: var(--muted);
+    border-radius: 999px; padding: 5px 12px; font-size: 13px; cursor: pointer; }
+  .chip.on { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; }
+  .tblwrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 720px; }
+  th, td { padding: 11px 12px; text-align: right; white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; white-space: normal; }
+  thead th { color: var(--muted); font-weight: 600; font-size: 12px; border-bottom: 1px solid var(--line); cursor: pointer; user-select: none; }
+  thead th.static { cursor: default; }
+  th .arrow { opacity: .5; font-size: 10px; }
+  tbody tr { border-bottom: 1px solid var(--line); }
+  tbody tr:last-child { border-bottom: 0; }
+  tbody tr.bench { background: var(--bench); }
+  tbody tr.best td.pick { color: var(--good); font-weight: 700; }
+  td.num { font-variant-numeric: tabular-nums; }
+  .name { font-weight: 600; }
+  .name a { color: inherit; text-decoration: none; border-bottom: 1px dotted var(--muted); }
+  .tag { display: inline-block; font-size: 11px; color: var(--muted); border: 1px solid var(--line);
+    border-radius: 6px; padding: 1px 6px; margin-top: 3px; }
+  .pill { font-size: 11px; border-radius: 6px; padding: 1px 6px; }
+  .pill.na { background: var(--line); color: var(--muted); }
+  .pill.stale { background: var(--bench); color: var(--warn); }
+  .pill.model { color: var(--muted); }
+  .prem-pos { color: var(--warn); } .prem-neg { color: var(--good); }
+  td.act a { font-size: 12px; }
+
+  .sim .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; margin: 10px 0 14px; }
+  .field { display: flex; flex-direction: column; gap: 3px; }
+  .field label { font-size: 12px; color: var(--muted); }
+  .field input { background: var(--card); color: var(--ink); border: 1px solid var(--line);
+    border-radius: 9px; padding: 8px 10px; font: inherit; width: 160px; }
+  .rank { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .note { color: var(--muted); font-size: 12px; margin-top: 8px; }
+
+  .chgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px,1fr)); gap: 10px; }
+  .chcard { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 13px 14px; box-shadow: var(--shadow); }
+  .chcard h3 { margin: 0 0 2px; font-size: 15px; }
+  .chcard .ty { font-size: 11px; color: var(--muted); }
+  .chcard p { font-size: 12.5px; color: var(--muted); margin: 8px 0 10px; }
+  .chcard .links { display: flex; gap: 7px; flex-wrap: wrap; }
+  .foot { color: var(--muted); font-size: 12px; margin-top: 26px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>เทียบราคาเนื้อเงินในไทย 🥈</h1>
+  <p class="sub">ทุกสินทรัพย์แปลงเป็นฐานเดียว — <b>บาท / กรัมเนื้อเงินบริสุทธิ์</b> · เทียบซื้อ-ขายทุกช่องทางในหน้าเดียว</p>
+
+  <div class="market" id="market"></div>
+
+  <div class="controls">
+    <div class="seg" id="side">
+      <button data-side="buy" class="on">ผมเป็นคนซื้อ (ถูกสุดก่อน)</button>
+      <button data-side="sell">ผมเป็นคนขาย (ได้เงินสุดก่อน)</button>
+    </div>
+    <label class="toggle"><input type="checkbox" id="vat" /> รวม VAT 7% (ฟิสิคัล)</label>
+    <div class="spacer"></div>
+    <span class="note" id="updated"></span>
+  </div>
+
+  <div class="chips" id="chips"></div>
+
+  <div class="card">
+    <div class="tblwrap">
+      <table id="tbl">
+        <thead>
+          <tr>
+            <th class="static">แหล่ง / instrument</th>
+            <th data-sort="bid">รับซื้อ (ขายได้) <span class="arrow"></span></th>
+            <th data-sort="ask">ขายออก (ซื้อจ่าย) <span class="arrow"></span></th>
+            <th data-sort="prem">พรีเมียม <span class="arrow"></span></th>
+            <th data-sort="spread">สเปรด <span class="arrow"></span></th>
+            <th class="static">สถานะ</th>
+            <th class="static">ซื้อ-ขาย</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </div>
+  <p class="note">หน่วยราคา = บาท/กรัมเนื้อเงินบริสุทธิ์ · พรีเมียมเทียบ spot · แถวเหลือง = ราคาอ้างอิงตลาดโลก · กด “ซื้อ-ขาย” เพื่อไปเว็บผู้ให้บริการ</p>
+
+  <div class="sim card" style="padding:16px 18px;">
+    <h2 style="margin-top:4px;">🧮 จำลองมูลค่า (ฐานเดียว)</h2>
+    <div class="row">
+      <div class="field"><label>งบประมาณ (บาท) — ฝั่งซื้อ</label><input id="budget" type="number" placeholder="เช่น 100000" /></div>
+      <div class="field"><label>น้ำหนักเนื้อเงิน (กรัม)</label><input id="weight" type="number" placeholder="เช่น 1000" /></div>
+    </div>
+    <div class="tblwrap">
+      <table id="simtbl">
+        <thead><tr>
+          <th class="static">อันดับ</th><th class="static">แหล่ง</th>
+          <th>ราคา/กรัม</th><th>ได้เนื้อเงิน (กรัม)</th><th>จ่าย/ได้รับ (บาท)</th><th>พรีเมียม</th>
+        </tr></thead>
+        <tbody id="simrows"></tbody>
+      </table>
+    </div>
+    <p class="note" id="simnote">ใส่งบเพื่อดูว่าซื้อได้กี่กรัม หรือใส่น้ำหนักเพื่อดูราคาซื้อ/เงินที่จะได้จากการขาย</p>
+  </div>
+
+  <h2>🏦 ช่องทางซื้อขาย &amp; วิธีเปิดบัญชี</h2>
+  <div class="chgrid" id="channels"></div>
+
+  <p class="foot" id="foot">—</p>
+</div>
+
+<script>
+const VAT = 0.07;
+const TYPE_LABELS = {
+  spot: 'Spot อ้างอิง', futures: 'Futures/โบรก', etf: 'ETF',
+  physical_bar: 'แท่ง 99.99%', physical_grain: 'เม็ดเงิน', physical_925: 'เงิน 92.5%',
+};
+// ช่องทางซื้อขาย + วิธีเปิดบัญชี (ข้อมูลอ้างอิง กดลิงก์เด้งไปเว็บจริง)
+const CHANNELS = [
+  { g:'ฟิสิคัล (แท่ง/เม็ดเงิน)', name:'Bowins Silver', ty:'แท่งเงิน 99.99% + เม็ดเงิน LBMA',
+    how:'สมัครสมาชิกในเว็บ/โทร 02-720-3000 → สั่งซื้อออนไลน์ นัดรับที่ร้านหรือจัดส่ง · รับซื้อคืน',
+    web:'https://www.bowinsgroup.com/th/silver-price', open:'https://www.bowinsgroup.com/th/about/contact' },
+  { g:'ฟิสิคัล', name:'YLG Bullion', ty:'ทอง+เงินแท่ง 99.99%',
+    how:'สมัครสมาชิกออนไลน์ + ยืนยันตัวตน (KYC) → เทรดซื้อ/ขายในระบบ, รับมอบของจริงได้',
+    web:'https://www.ylgbullion.co.th', open:'https://www.ylgbullion.co.th/th/how-to-apply' },
+  { g:'ฟิสิคัล', name:'Ausiris Silver', ty:'แท่งเงิน 99.99%',
+    how:'เพิ่มเพื่อน LINE @ausirissilver หรือไปหน้าร้าน Silom Complex ชั้น 4 → ซื้อ/ขายผ่านเจ้าหน้าที่',
+    web:'http://www.ausiris.co.th/content/index/silver.html', open:'https://line.me/R/ti/p/@ausirissilver' },
+  { g:'ฟิสิคัล', name:'MTS Gold แม่ทองสุก', ty:'เม็ดเงิน/แท่งเงิน',
+    how:'เปิดบัญชีสมาชิก (กรอกเอกสาร/KYC) → สั่งซื้อ-ขายผ่านโทรศัพท์/ระบบสมาชิก',
+    web:'https://www.mtsgold.co.th/th/products/detail.php?ID=96&SCODE=ProGoldBullion', open:'https://www.mtsgold.co.th' },
+  { g:'TFEX Silver Futures (ในกำกับ ก.ล.ต.)', name:'InnovestX', ty:'บัญชีอนุพันธ์ TFEX',
+    how:'เปิดบัญชีอนุพันธ์ TFEX ในแอป (KYC + วางหลักประกัน) → เทรด Silver Online Futures',
+    web:'https://www.innovestx.co.th', open:'https://www.innovestx.co.th' },
+  { g:'TFEX Silver Futures', name:'YLG Futures / Hua Seng Heng', ty:'บัญชีอนุพันธ์ TFEX',
+    how:'เปิดบัญชี TFEX กับโบรก → เทรดฟิวเจอร์สเงิน (SVF) อิง USD/oz มี leverage',
+    web:'https://www.ylgfutures.co.th', open:'https://www.ylgfutures.co.th' },
+  { g:'TFEX Silver Futures', name:'สเปกสัญญา TFEX', ty:'ข้อมูลสัญญา/ราคาสด',
+    how:'ดูสเปก/หลักประกัน/ราคาดีเลย์ 15 นาที ก่อนเปิดบัญชีกับโบรกใดก็ได้',
+    web:'https://www.tfex.co.th/en/products/precious-metal/silver-online-futures/contract-specification', open:'https://www.tfex.co.th/en/products/precious-metal/silver-online-futures/market-data' },
+  { g:'ETF เงินต่างประเทศ', name:'InnovestX / Dime! / Liberator', ty:'หุ้น/ETF ต่างประเทศ (SLV, SIVR)',
+    how:'เปิดบัญชีหุ้นต่างประเทศ (KYC + W-8BEN) → ซื้อ ETF เงิน SLV/SIVR ⚠️ มีค่าคอม+FX+อาจมีภาษีเงินได้ตปท.',
+    web:'https://www.innovestx.co.th', open:'https://www.dime.co.th' },
+];
+
+const state = { side:'buy', vat:false, type:'all', sortKey:'ask', sortDir:'asc', snap:null };
+const $ = (s) => document.querySelector(s);
+const fmt = (n,d=2) => n==null||!isFinite(n) ? '–' : n.toLocaleString('th-TH',{minimumFractionDigits:d,maximumFractionDigits:d});
+const pct = (n) => n==null||!isFinite(n) ? '–' : (n*100).toLocaleString('th-TH',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';
+const premCls = (v)=> v==null?'':(v>=0?'prem-pos':'prem-neg');
+
+// คำนวณค่าที่ขึ้นกับ VAT ฝั่ง client (จาก bidBase/askBase ดิบใน snapshot)
+function derive(r, spotBase) {
+  const vatMult = state.vat && r.vatApplicable ? 1+VAT : 1;
+  const ask = r.askBase!=null ? r.askBase*vatMult : null;   // ฝั่งซื้อจ่าย VAT
+  const bid = r.bidBase;                                     // ฝั่งขาย (ร้านรับซื้อ) ไม่บวก VAT
+  return {
+    ...r, ask, bid,
+    prem: ask!=null && spotBase>0 ? ask/spotBase-1 : null,
+    premSell: bid!=null && spotBase>0 ? bid/spotBase-1 : null,
+    spread: (r.bidBase!=null && r.askBase!=null && r.bidBase>0) ? (r.askBase-r.bidBase)/r.bidBase : null,
+  };
+}
+
+async function load() {
+  let snap = null;
+  try { const r = await fetch('/api/prices'); if (r.ok) snap = await r.json(); } catch {}
+  if (!snap) { try { const r = await fetch('data/latest.json',{cache:'no-store'}); if (r.ok) snap = await r.json(); } catch {} }
+  if (!snap) { $('#foot').textContent = 'โหลดข้อมูลไม่สำเร็จ'; return; }
+  state.snap = snap; render(); runSim();
+}
+
+function render() {
+  const s = state.snap; if (!s) return;
+  const m = s.market;
+  const chg = m.spotChangePct!=null ? ` <span class="${m.spotChangePct>=0?'prem-neg':'prem-pos'}">(${m.spotChangePct>=0?'+':''}${(m.spotChangePct*100).toFixed(2)}%)</span>` : '';
+  $('#market').innerHTML = [
+    stat('Silver Spot', fmt(m.spotUsdOz,3)+chg, 'USD/oz · '+(m.spotSource||'—')),
+    stat('USD/THB', fmt(m.fx,3), (m.fxSource||'—')+(m.fxDate?' · '+m.fxDate:'')),
+    stat('ราคาฐาน (spot)', fmt(m.spotBase,2), 'บาท/กรัมเนื้อเงินบริสุทธิ์'),
+    stat('อัปเดตล่าสุด', new Date(s.ts).toLocaleTimeString('th-TH'), new Date(s.ts).toLocaleDateString('th-TH')),
+  ].join('');
+  $('#updated').textContent = 'ข้อมูล ' + new Date(s.ts).toLocaleString('th-TH');
+
+  const rows0 = s.rows.map(r => derive(r, m.spotBase));
+  const types = ['all', ...new Set(s.rows.map(r=>r.type))];
+  $('#chips').innerHTML = types.map(t => `<span class="chip ${state.type===t?'on':''}" data-type="${t}">${t==='all'?'ทั้งหมด':TYPE_LABELS[t]||t}</span>`).join('');
+
+  let rows = rows0.filter(r => state.type==='all' || r.type===state.type);
+  const key = state.sortKey;
+  const avail = rows.filter(r => r[key]!=null), na = rows.filter(r => r[key]==null);
+  avail.sort((a,b)=> state.sortDir==='asc' ? a[key]-b[key] : b[key]-a[key]);
+  rows = [...avail, ...na];
+
+  const pickCol = state.side==='buy' ? 'ask' : 'bid';
+  const cands = rows0.filter(r=>r.type!=='spot' && r[pickCol]!=null).sort((a,b)=> state.side==='buy'?a[pickCol]-b[pickCol]:b[pickCol]-a[pickCol]);
+  const bestId = cands[0]?.id;
+
+  $('#rows').innerHTML = rows.map(r => {
+    const q=r.native||{}; let status='';
+    if (!q.ok) status = `<span class="pill na">${q.error||'ไม่พร้อม'}</span>`;
+    else { if (q.stale) status += `<span class="pill stale">ค่าประมาณ/เก่า</span> `; if (r.spreadModeled) status += `<span class="pill model">สเปรดจำลอง</span>`; if (!status) status = `<span class="pill model">สด</span>`; }
+    const nm = r.url ? `<a href="${r.url}" target="_blank" rel="noopener">${r.name}</a>` : r.name;
+    const prem = state.side==='buy'?r.prem:r.premSell;
+    const act = r.url ? `<a class="btn" href="${r.url}" target="_blank" rel="noopener">ซื้อ-ขาย →</a>` : '';
+    return `<tr class="${r.type==='spot'?'bench':''} ${r.id===bestId?'best':''}">
+      <td><div class="name">${nm}</div><span class="tag">${TYPE_LABELS[r.type]||r.type}</span>${r.vatApplicable?' <span class="tag">VAT</span>':''}</td>
+      <td class="num ${pickCol==='bid'?'pick':''}">${fmt(r.bid)}</td>
+      <td class="num ${pickCol==='ask'?'pick':''}">${fmt(r.ask)}</td>
+      <td class="num ${premCls(prem)}">${pct(prem)}</td>
+      <td class="num">${pct(r.spread)}</td>
+      <td>${status}</td>
+      <td class="act">${act}</td>
+    </tr>`;
+  }).join('');
+  updateArrows();
+
+  $('#channels').innerHTML = CHANNELS.map(c => `<div class="chcard">
+    <div class="ty">${c.g}</div><h3>${c.name}</h3><div class="ty">${c.ty}</div>
+    <p>${c.how}</p>
+    <div class="links"><a class="btn p" href="${c.web}" target="_blank" rel="noopener">ไปที่เว็บ →</a>
+      <a class="btn" href="${c.open}" target="_blank" rel="noopener">เปิดบัญชี</a></div>
+  </div>`).join('');
+
+  $('#foot').textContent = 'ราคาอ้างอิงเพื่อการเปรียบเทียบ ไม่ใช่คำแนะนำการลงทุน · แหล่ง: gold-api/goldprice, frankfurter, TFEX, Yahoo, ร้านค้า';
+}
+
+function runSim() {
+  const s = state.snap; if (!s) return;
+  const budget = parseFloat($('#budget').value), weight = parseFloat($('#weight').value);
+  const buy = state.side==='buy';
+  let rows = s.rows.map(r=>derive(r, s.market.spotBase))
+    .filter(r => (buy?r.ask:r.bid)!=null && (state.type==='all'||r.type===state.type));
+  rows.sort((a,b)=> buy ? a.ask-b.ask : b.bid-a.bid);
+  $('#simrows').innerHTML = rows.map((r,i)=>{
+    const unit = buy?r.ask:r.bid;
+    const grams = buy && isFinite(budget) ? budget/unit : null;
+    const cost = buy && isFinite(weight) ? weight*unit : null;
+    const proceeds = !buy && isFinite(weight) ? weight*unit : null;
+    const prem = buy?r.prem:r.premSell;
+    return `<tr><td class="rank">#${i+1}</td><td class="name">${r.name}</td>
+      <td class="num">${fmt(unit)}</td>
+      <td class="num">${grams!=null?fmt(grams,2):'–'}</td>
+      <td class="num">${buy?(cost!=null?fmt(cost):'–'):(proceeds!=null?fmt(proceeds):'–')}</td>
+      <td class="num ${premCls(prem)}">${pct(prem)}</td></tr>`;
+  }).join('') || '<tr><td colspan="6" class="note">ไม่มีข้อมูล</td></tr>';
+  $('#simnote').textContent = buy ? 'ฝั่งซื้อ: อันดับ 1 = จ่ายต่อกรัมถูกที่สุด'+(state.vat?' (รวม VAT)':'') : 'ฝั่งขาย: อันดับ 1 = ได้เงินต่อกรัมมากที่สุด';
+}
+
+function stat(k,v,u){ return `<div class="stat"><div class="k">${k}</div><div class="v">${v}</div><div class="u">${u}</div></div>`; }
+function updateArrows(){ document.querySelectorAll('th[data-sort]').forEach(th=>{ const a=th.querySelector('.arrow'); a.textContent = th.dataset.sort===state.sortKey?(state.sortDir==='asc'?'▲':'▼'):''; }); }
+
+$('#side').addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b) return;
+  state.side=b.dataset.side; document.querySelectorAll('#side button').forEach(x=>x.classList.toggle('on',x===b));
+  state.sortKey=state.side==='buy'?'ask':'bid'; state.sortDir=state.side==='buy'?'asc':'desc'; save(); render(); });
+$('#vat').addEventListener('change', e=>{ state.vat=e.target.checked; save(); render(); });
+$('#chips').addEventListener('click', e=>{ const c=e.target.closest('.chip'); if(!c) return; state.type=c.dataset.type; save(); render(); });
+$('#tbl').addEventListener('click', e=>{ const th=e.target.closest('th[data-sort]'); if(!th) return; const k=th.dataset.sort;
+  if(state.sortKey===k) state.sortDir=state.sortDir==='asc'?'desc':'asc'; else { state.sortKey=k; state.sortDir=k==='bid'?'desc':'asc'; } render(); });
+[$('#budget'),$('#weight')].forEach(i=>i.addEventListener('input', runSim));
+
+function save(){ try{ localStorage.setItem('silver-ui', JSON.stringify({side:state.side,vat:state.vat,type:state.type})); }catch{} }
+function restore(){ try{ const s=JSON.parse(localStorage.getItem('silver-ui')||'{}');
+  if(s.side){ state.side=s.side; state.sortKey=s.side==='buy'?'ask':'bid'; state.sortDir=s.side==='buy'?'asc':'desc';
+    document.querySelectorAll('#side button').forEach(x=>x.classList.toggle('on',x.dataset.side===s.side)); }
+  if(typeof s.vat==='boolean'){ state.vat=s.vat; $('#vat').checked=s.vat; }
+  if(s.type) state.type=s.type; }catch{} }
+restore(); load(); setInterval(load, 300000);
+</script>
+</body>
+</html>

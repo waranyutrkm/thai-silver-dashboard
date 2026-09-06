@@ -1,0 +1,4 @@
+node_modules/
+*.log
+.DS_Store
+# public/data/latest.json ถูก commit ไว้ (ทั้ง CI และ Mac cron อัปเดตไฟล์นี้)

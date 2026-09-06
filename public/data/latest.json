@@ -1,0 +1,157 @@
+{
+  "ts": 1788678300664,
+  "market": {
+    "spotUsdOz": 66.2193,
+    "fx": 32.92,
+    "spotBase": 70.0866777697341,
+    "ts": 1788678300664,
+    "spotChangePct": -0.013431,
+    "spotSource": "goldprice.org",
+    "fxSource": "frankfurter.app",
+    "fxDate": "2026-09-04",
+    "ok": true
+  },
+  "rows": [
+    {
+      "id": "spot_xag",
+      "name": "Silver Spot (XAG/USD)",
+      "type": "spot",
+      "url": "https://www.gold-api.com/",
+      "note": "ราคาอ้างอิงตลาดโลก — เส้น benchmark",
+      "bidBase": 70.0692,
+      "askBase": 70.1042,
+      "askBaseEff": 70.1042,
+      "bidBaseEff": 70.0692,
+      "vatApplicable": false,
+      "premiumBuy": 0.0002,
+      "premiumSell": -0.0002,
+      "spreadPct": 0.0005,
+      "spreadModeled": true,
+      "native": {
+        "id": "spot_xag",
+        "last": 66.2193,
+        "currency": "USD",
+        "ts": 1788678295107,
+        "ok": true
+      }
+    },
+    {
+      "id": "tfex_svf",
+      "name": "TFEX Silver Online Futures",
+      "type": "futures",
+      "url": "https://www.tfex.co.th/en/products/precious-metal/silver-online-futures/market-data",
+      "note": "ฟิวเจอร์สเงินในไทย (ในกำกับ ก.ล.ต.) · ดีเลย์ 15 นาที · เดือนใกล้สุด",
+      "bidBase": 70.3732,
+      "askBase": 70.4049,
+      "askBaseEff": 70.4049,
+      "bidBaseEff": 70.3732,
+      "vatApplicable": false,
+      "premiumBuy": 0.0045,
+      "premiumSell": 0.0041,
+      "spreadPct": 0.0005,
+      "spreadModeled": false,
+      "native": {
+        "id": "tfex_svf",
+        "bid": 66.49,
+        "ask": 66.52,
+        "last": 66.49,
+        "currency": "USD",
+        "ts": 1788552305586,
+        "ok": true
+      }
+    },
+    {
+      "id": "comex_si",
+      "name": "COMEX Silver Futures (SI=F)",
+      "type": "futures",
+      "url": "https://finance.yahoo.com/quote/SI=F",
+      "note": "ฟิวเจอร์สเงินตลาดโลก (COMEX) · เดือนใกล้สุด",
+      "bidBase": 70.6251,
+      "askBase": 70.6674,
+      "askBaseEff": 70.6674,
+      "bidBaseEff": 70.6251,
+      "vatApplicable": false,
+      "premiumBuy": 0.0083,
+      "premiumSell": 0.0077,
+      "spreadPct": 0.0006,
+      "spreadModeled": true,
+      "native": {
+        "id": "comex_si",
+        "last": 66.748,
+        "currency": "USD",
+        "ts": 1788555595000,
+        "ok": true
+      }
+    },
+    {
+      "id": "etf_slv",
+      "name": "iShares Silver Trust (SLV)",
+      "type": "etf",
+      "url": "https://www.ishares.com/us/products/239855/",
+      "note": "ETF อิงเงินจริง · ค่าธรรมเนียม 0.50%/ปี · ซื้อผ่านโบรกหุ้น US",
+      "bidBase": 69.8616,
+      "askBase": 69.9036,
+      "askBaseEff": 69.9036,
+      "bidBaseEff": 69.8616,
+      "vatApplicable": false,
+      "premiumBuy": -0.0026,
+      "premiumSell": -0.0032,
+      "spreadPct": 0.0006,
+      "spreadModeled": true,
+      "native": {
+        "id": "etf_slv",
+        "last": 59.82,
+        "currency": "USD",
+        "ts": 1788552000000,
+        "ok": true
+      }
+    },
+    {
+      "id": "etf_sivr",
+      "name": "abrdn Physical Silver (SIVR)",
+      "type": "etf",
+      "url": "https://www.abrdn.com/en-us/investor/products/etfs/sivr",
+      "note": "ETF อิงเงินจริง · ค่าธรรมเนียม 0.30%/ปี · ซื้อผ่านโบรกหุ้น US",
+      "bidBase": 69.9868,
+      "askBase": 70.0428,
+      "askBaseEff": 70.0428,
+      "bidBaseEff": 69.9868,
+      "vatApplicable": false,
+      "premiumBuy": -0.0006,
+      "premiumSell": -0.0014,
+      "spreadPct": 0.0008,
+      "spreadModeled": true,
+      "native": {
+        "id": "etf_sivr",
+        "last": 62.91,
+        "currency": "USD",
+        "ts": 1788552000000,
+        "ok": true
+      }
+    },
+    {
+      "id": "bowins_1kg",
+      "name": "Bowins แท่งเงิน 1 กก. (99.99%)",
+      "type": "physical_bar",
+      "url": "https://www.bowinsgroup.com/th/silver-price",
+      "note": "ร้านจริง · รับซื้อ/ขายออก · ขายออกยังไม่รวม VAT 7% (กดปุ่ม VAT เพื่อรวม)",
+      "bidBase": 68.8569,
+      "askBase": 70.357,
+      "askBaseEff": 70.357,
+      "bidBaseEff": 68.8569,
+      "vatApplicable": true,
+      "premiumBuy": 0.0039,
+      "premiumSell": -0.0175,
+      "spreadPct": 0.0218,
+      "spreadModeled": false,
+      "native": {
+        "id": "bowins_1kg",
+        "bid": 68850,
+        "ask": 70350,
+        "currency": "THB",
+        "ts": 1788678300823,
+        "ok": true
+      }
+    }
+  ]
+}
