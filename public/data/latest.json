@@ -1,10 +1,10 @@
 {
-  "ts": 1788709202523,
+  "ts": 1788710403043,
   "market": {
     "spotUsdOz": 66.2193,
     "fx": 32.92,
     "spotBase": 70.0866777697341,
-    "ts": 1788709202523,
+    "ts": 1788710403043,
     "spotChangePct": -0.013431,
     "spotSource": "goldprice.org",
     "fxSource": "frankfurter.app",
@@ -33,7 +33,7 @@
         "id": "spot_xag",
         "last": 66.2193,
         "currency": "USD",
-        "ts": 1788709175758,
+        "ts": 1788710375867,
         "ok": true
       }
     },
@@ -161,7 +161,7 @@
         "bid": 68850,
         "ask": 70350,
         "currency": "THB",
-        "ts": 1788709202762,
+        "ts": 1788710403270,
         "ok": true
       }
     },
