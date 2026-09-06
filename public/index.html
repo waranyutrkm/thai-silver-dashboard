@@ -109,6 +109,8 @@
       <button data-side="sell">ผมเป็นคนขาย (ได้เงินสุดก่อน)</button>
     </div>
     <label class="toggle"><input type="checkbox" id="vat" /> รวม VAT 7% (ฟิสิคัล)</label>
+    <label class="toggle"><input type="checkbox" id="allin" /> รวมค่าธรรมเนียม (all-in)</label>
+    <label class="toggle">ถือ <input type="number" id="years" min="0" step="0.5" value="3" style="width:50px;border:0;background:transparent;color:var(--ink);font:inherit;text-align:right"> ปี</label>
     <div class="spacer"></div>
     <span class="note" id="updated"></span>
   </div>
@@ -122,7 +124,7 @@
           <tr>
             <th class="static">แหล่ง / instrument</th>
             <th data-sort="bid">รับซื้อ (ขายได้) <span class="arrow"></span></th>
-            <th data-sort="ask">ขายออก (ซื้อจ่าย) <span class="arrow"></span></th>
+            <th data-sort="ask"><span id="askLabel">ขายออก (ซื้อจ่าย)</span> <span class="arrow"></span></th>
             <th data-sort="prem">พรีเมียม <span class="arrow"></span></th>
             <th data-sort="spread">สเปรด <span class="arrow"></span></th>
             <th class="static">สถานะ</th>
@@ -135,7 +137,8 @@
   </div>
   <p class="note">หน่วยราคา = บาท/กรัมเนื้อเงินบริสุทธิ์ · พรีเมียมเทียบ spot · แถวเหลือง = ราคาอ้างอิงตลาดโลก · กด “ซื้อ-ขาย” เพื่อไปเว็บผู้ให้บริการ<br>
   <b>ราคาตลาด (ค่าเดียว)</b> = แหล่งให้ราคามาค่าเดียว (spot/ETF/ฟิวเจอร์ส) — ซื้อ≈ขาย, ส่วนต่างจริงคือค่าคอมโบรก · <b>ซื้อ-ขาย 2 ฝั่ง</b> = ร้าน/TFEX ให้ราคารับซื้อ-ขายออกจริงแยกกัน (มีสเปรด)<br>
-  ทั้งคู่คือ “ค่าล่าสุดที่มี” — แต่ความสดต่างกันตามแหล่ง: spot เรียลไทม์ · TFEX ดีเลย์ 15 นาที · ETF/COMEX = ราคาปิดตลาดสหรัฐฯ · ร้าน = อัปเดตเป็นรอบ/วัน (ชี้เมาส์ที่สถานะเพื่อดูเวลาอัปเดต)</p>
+  ทั้งคู่คือ “ค่าล่าสุดที่มี” — แต่ความสดต่างกันตามแหล่ง: spot เรียลไทม์ · TFEX ดีเลย์ 15 นาที · ETF/COMEX = ราคาปิดตลาดสหรัฐฯ · ร้าน = อัปเดตเป็นรอบ/วัน (ชี้เมาส์ที่สถานะเพื่อดูเวลาอัปเดต)<br>
+  <b>รวมค่าธรรมเนียม (all-in)</b> = บวกค่าคอม/FX (ครั้งเดียว) + ค่าธรรมเนียมรายปี×ปีที่ถือ (ETF expense ratio, ฟิวเจอร์ส contango) — ค่าธรรมเนียม<b>โดยประมาณ</b> ชี้เมาส์ที่ช่องราคาเพื่อดูที่มา · ฟิสิคัลไม่มีค่าถือครองรายปี (ยิ่งถือนานยิ่งได้เปรียบ)</p>
 
   <div class="sim card" style="padding:16px 18px;">
     <h2 style="margin-top:4px;">🧮 จำลองมูลค่า (ฐานเดียว)</h2>
@@ -198,22 +201,27 @@ const CHANNELS = [
     web:'https://www.innovestx.co.th', open:'https://www.dime.co.th' },
 ];
 
-const state = { side:'buy', vat:false, type:'all', sortKey:'ask', sortDir:'asc', snap:null };
+const state = { side:'buy', vat:false, allin:false, years:3, type:'all', sortKey:'ask', sortDir:'asc', snap:null };
 const $ = (s) => document.querySelector(s);
 const fmt = (n,d=2) => n==null||!isFinite(n) ? '–' : n.toLocaleString('th-TH',{minimumFractionDigits:d,maximumFractionDigits:d});
 const pct = (n) => n==null||!isFinite(n) ? '–' : (n*100).toLocaleString('th-TH',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';
 const premCls = (v)=> v==null?'':(v>=0?'prem-pos':'prem-neg');
 
-// คำนวณค่าที่ขึ้นกับ VAT ฝั่ง client (จาก bidBase/askBase ดิบใน snapshot)
+// คำนวณค่าที่ขึ้นกับ VAT + ค่าธรรมเนียม ฝั่ง client (จาก bidBase/askBase ดิบใน snapshot)
 function derive(r, spotBase) {
   const vatMult = state.vat && r.vatApplicable ? 1+VAT : 1;
-  const ask = r.askBase!=null ? r.askBase*vatMult : null;   // ฝั่งซื้อจ่าย VAT
-  const bid = r.bidBase;                                     // ฝั่งขาย (ร้านรับซื้อ) ไม่บวก VAT
+  const askEff = r.askBase!=null ? r.askBase*vatMult : null;  // ราคาซื้อ (+VAT ถ้าเปิด)
+  const bid = r.bidBase;                                      // ฝั่งขาย (ร้านรับซื้อ) ไม่บวก VAT
+  // all-in = ราคา + ค่าคอม/FX (ครั้งเดียว) + ค่าธรรมเนียมรายปี × ปีที่ถือ
+  const yrs = state.years || 0;
+  const askAllin = askEff!=null
+    ? askEff*(1+(r.feeBuyOncePct||0)) + askEff*(r.feeAnnualPct||0)*yrs : null;
+  const ask = state.allin ? askAllin : askEff;
   return {
-    ...r, ask, bid,
+    ...r, ask, askEff, askAllin, bid,
     prem: ask!=null && spotBase>0 ? ask/spotBase-1 : null,
     premSell: bid!=null && spotBase>0 ? bid/spotBase-1 : null,
-    spread: (r.bidBase!=null && r.askBase!=null && r.bidBase>0) ? (r.askBase-r.bidBase)/r.bidBase : null,
+    spread: (!r.mid && r.bidBase!=null && r.askBase!=null && r.bidBase>0) ? (r.askBase-r.bidBase)/r.bidBase : null,
   };
 }
 
@@ -264,7 +272,7 @@ function render() {
     return `<tr class="${r.type==='spot'?'bench':''} ${r.id===bestId?'best':''}">
       <td><div class="name">${nm}</div><span class="tag">${TYPE_LABELS[r.type]||r.type}</span>${r.vatApplicable?' <span class="tag">VAT</span>':''}</td>
       <td class="num ${pickCol==='bid'?'pick':''}">${fmt(r.bid)}</td>
-      <td class="num ${pickCol==='ask'?'pick':''}">${fmt(r.ask)}</td>
+      <td class="num ${pickCol==='ask'?'pick':''}" title="${state.allin&&r.askEff!=null?('ราคา '+fmt(r.askEff)+' + คอม/FX '+((r.feeBuyOncePct||0)*100).toFixed(2)+'% + รายปี '+((r.feeAnnualPct||0)*100).toFixed(2)+'%×'+state.years+'ปี = '+fmt(r.ask)):''}">${fmt(r.ask)}</td>
       <td class="num ${premCls(prem)}">${pct(prem)}</td>
       <td class="num">${r.mid ? '–' : pct(r.spread)}</td>
       <td>${status}</td>
@@ -272,6 +280,7 @@ function render() {
     </tr>`;
   }).join('');
   updateArrows();
+  $('#askLabel').textContent = state.allin ? `ต้นทุน all-in (ถือ ${state.years} ปี)` : 'ขายออก (ซื้อจ่าย)';
 
   $('#channels').innerHTML = CHANNELS.map(c => `<div class="chcard">
     <div class="ty">${c.g}</div><h3>${c.name}</h3><div class="ty">${c.ty}</div>
@@ -311,17 +320,21 @@ function updateArrows(){ document.querySelectorAll('th[data-sort]').forEach(th=>
 $('#side').addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b) return;
   state.side=b.dataset.side; document.querySelectorAll('#side button').forEach(x=>x.classList.toggle('on',x===b));
   state.sortKey=state.side==='buy'?'ask':'bid'; state.sortDir=state.side==='buy'?'asc':'desc'; save(); render(); });
-$('#vat').addEventListener('change', e=>{ state.vat=e.target.checked; save(); render(); });
+$('#vat').addEventListener('change', e=>{ state.vat=e.target.checked; save(); render(); runSim(); });
+$('#allin').addEventListener('change', e=>{ state.allin=e.target.checked; save(); render(); runSim(); });
+$('#years').addEventListener('input', e=>{ state.years=parseFloat(e.target.value)||0; save(); render(); runSim(); });
 $('#chips').addEventListener('click', e=>{ const c=e.target.closest('.chip'); if(!c) return; state.type=c.dataset.type; save(); render(); });
 $('#tbl').addEventListener('click', e=>{ const th=e.target.closest('th[data-sort]'); if(!th) return; const k=th.dataset.sort;
   if(state.sortKey===k) state.sortDir=state.sortDir==='asc'?'desc':'asc'; else { state.sortKey=k; state.sortDir=k==='bid'?'desc':'asc'; } render(); });
 [$('#budget'),$('#weight')].forEach(i=>i.addEventListener('input', runSim));
 
-function save(){ try{ localStorage.setItem('silver-ui', JSON.stringify({side:state.side,vat:state.vat,type:state.type})); }catch{} }
+function save(){ try{ localStorage.setItem('silver-ui', JSON.stringify({side:state.side,vat:state.vat,allin:state.allin,years:state.years,type:state.type})); }catch{} }
 function restore(){ try{ const s=JSON.parse(localStorage.getItem('silver-ui')||'{}');
   if(s.side){ state.side=s.side; state.sortKey=s.side==='buy'?'ask':'bid'; state.sortDir=s.side==='buy'?'asc':'desc';
     document.querySelectorAll('#side button').forEach(x=>x.classList.toggle('on',x.dataset.side===s.side)); }
   if(typeof s.vat==='boolean'){ state.vat=s.vat; $('#vat').checked=s.vat; }
+  if(typeof s.allin==='boolean'){ state.allin=s.allin; $('#allin').checked=s.allin; }
+  if(typeof s.years==='number'){ state.years=s.years; $('#years').value=s.years; }
   if(s.type) state.type=s.type; }catch{} }
 restore(); load(); setInterval(load, 300000);
 </script>

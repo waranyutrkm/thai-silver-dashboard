@@ -40,8 +40,10 @@ export const INSTRUMENTS: Instrument[] = [
     purity: 0.999,
     vatApplicable: false,
     contractOz: 300, // priceQuotationFactor 3000 / tick — สัญญาอิง USD/oz (ดูสเปก TFEX)
+    feeBuyPct: 0.0015, // ค่าคอม/สัญญา + ค่าธรรมเนียมตลาด + VAT บนคอม (โดยประมาณ)
+    feeAnnualPct: 0.07, // contango/ต้นทุน roll ~7%/ปี (จากส่วนต่างเดือนใกล้-ไกลจริง)
     url: 'https://www.tfex.co.th/en/products/precious-metal/silver-online-futures/market-data',
-    note: 'ฟิวเจอร์สเงินในไทย (ในกำกับ ก.ล.ต.) · ดีเลย์ 15 นาที · เดือนใกล้สุด',
+    note: 'ฟิวเจอร์สเงินในไทย (ในกำกับ ก.ล.ต.) · ดีเลย์ 15 นาที · เดือนใกล้สุด · มี contango เวลาถือยาว',
   },
   {
     id: 'comex_si',
@@ -52,8 +54,11 @@ export const INSTRUMENTS: Instrument[] = [
     purity: 0.999,
     vatApplicable: false,
     contractOz: 5000,
+    feeBuyPct: 0.001,
+    feeFxPct: 0.005, // เทรดผ่านโบรก ตปท. มี FX
+    feeAnnualPct: 0.06, // contango/ต้นทุน roll ~6%/ปี (โดยประมาณ)
     url: 'https://finance.yahoo.com/quote/SI=F',
-    note: 'ฟิวเจอร์สเงินตลาดโลก (COMEX) · เดือนใกล้สุด',
+    note: 'ฟิวเจอร์สเงินตลาดโลก (COMEX) · เดือนใกล้สุด · มี contango เวลาถือยาว',
   },
   {
     id: 'etf_slv',
@@ -65,7 +70,9 @@ export const INSTRUMENTS: Instrument[] = [
     vatApplicable: false,
     ozPerShare: 0.906, // ⚠️ verify: iShares "silver per share"
     navProxy: true, // fallback ถ้าดึงราคาตลาดจริงไม่ได้
-    expenseRatio: 0.005,
+    feeBuyPct: 0.002, // ค่าคอมหุ้น ตปท. ~0.2% (โดยประมาณ)
+    feeFxPct: 0.005, // FX markup แปลงบาท→USD ~0.5%
+    feeAnnualPct: 0.005, // expense ratio 0.50%/ปี
     url: 'https://www.ishares.com/us/products/239855/',
     note: 'ETF อิงเงินจริง · ค่าธรรมเนียม 0.50%/ปี · ซื้อผ่านโบรกหุ้น US',
   },
@@ -79,7 +86,9 @@ export const INSTRUMENTS: Instrument[] = [
     vatApplicable: false,
     ozPerShare: 0.951, // ⚠️ verify: abrdn "metal per share"
     navProxy: true,
-    expenseRatio: 0.003,
+    feeBuyPct: 0.002,
+    feeFxPct: 0.005,
+    feeAnnualPct: 0.003, // expense ratio 0.30%/ปี
     url: 'https://www.abrdn.com/en-us/investor/products/etfs/sivr',
     note: 'ETF อิงเงินจริง · ค่าธรรมเนียม 0.30%/ปี · ซื้อผ่านโบรกหุ้น US',
   },

@@ -89,6 +89,8 @@ export function normalizeOne(
     premiumSell: null,
     spreadPct: null,
     mid: false,
+    feeBuyOncePct: (inst.feeBuyPct ?? 0) + (inst.feeFxPct ?? 0),
+    feeAnnualPct: inst.feeAnnualPct ?? 0,
     native: q,
   };
 
