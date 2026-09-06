@@ -1,6 +1,3 @@
-import { mkdir, writeFile } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { INSTRUMENTS } from './config';
 import { buildMarketContext, normalizeOne } from './normalize';
 import { fetchBowins1kg } from './sources/bowins';
@@ -10,10 +7,6 @@ import { fetchSilverSpot } from './sources/metals';
 import { fetchThongsuayGrain } from './sources/thongsuay';
 import type { MarketContext, RawQuote, Snapshot } from './types';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-// เขียนไว้ใน public/ เพื่อให้โฮสต์ static (GitHub Pages) เสิร์ฟไฟล์นี้ได้ตรง ๆ
-const DATA_FILE = join(__dirname, '..', 'public', 'data', 'latest.json');
-
 interface CachedData {
   market: MarketContext;
   quotes: RawQuote[];
@@ -21,7 +14,8 @@ interface CachedData {
 }
 let cached: CachedData | null = null;
 
-/** ดึงข้อมูลสดทุกแหล่งพร้อมกัน → อัปเดต cache + เขียนไฟล์ snapshot
+/** ดึงข้อมูลสดทุกแหล่งพร้อมกัน → อัปเดต cache ในหน่วยความจำ (ไม่เขียนไฟล์)
+ *  ไฟล์ public/data/latest.json เขียนโดย src/snapshot.ts เท่านั้น (CI/Mac/manual)
  *  @param opts.useBrowser เปิด headless Chrome ดึง TFEX/Yahoo (ปิดได้บน CI ที่ IP โดนบล็อก) */
 export async function refresh(opts: { useBrowser?: boolean } = {}): Promise<CachedData> {
   const useBrowser = opts.useBrowser ?? true;
@@ -126,13 +120,6 @@ export async function refresh(opts: { useBrowser?: boolean } = {}): Promise<Cach
   });
 
   cached = { market, quotes, ts: now };
-
-  try {
-    await mkdir(dirname(DATA_FILE), { recursive: true });
-    await writeFile(DATA_FILE, JSON.stringify(getSnapshot(false), null, 2));
-  } catch {
-    /* เขียนไฟล์ไม่ได้ ไม่เป็นไร */
-  }
   return cached;
 }
 
