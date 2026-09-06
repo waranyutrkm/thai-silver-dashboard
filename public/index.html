@@ -133,7 +133,8 @@
       </table>
     </div>
   </div>
-  <p class="note">หน่วยราคา = บาท/กรัมเนื้อเงินบริสุทธิ์ · พรีเมียมเทียบ spot · แถวเหลือง = ราคาอ้างอิงตลาดโลก · กด “ซื้อ-ขาย” เพื่อไปเว็บผู้ให้บริการ</p>
+  <p class="note">หน่วยราคา = บาท/กรัมเนื้อเงินบริสุทธิ์ · พรีเมียมเทียบ spot · แถวเหลือง = ราคาอ้างอิงตลาดโลก · กด “ซื้อ-ขาย” เพื่อไปเว็บผู้ให้บริการ<br>
+  <b>ราคาตลาด</b> = สินทรัพย์กระดาษ (spot/ETF/ฟิวเจอร์ส) ราคาจริงค่าเดียว — ส่วนต่างซื้อ-ขายจริงคือค่าคอมโบรก · <b>สด (2 ฝั่งจริง)</b> = ร้าน/TFEX มีราคารับซื้อ-ขายออกจริงสองฝั่ง</p>
 
   <div class="sim card" style="padding:16px 18px;">
     <h2 style="margin-top:4px;">🧮 จำลองมูลค่า (ฐานเดียว)</h2>
@@ -252,7 +253,9 @@ function render() {
   $('#rows').innerHTML = rows.map(r => {
     const q=r.native||{}; let status='';
     if (!q.ok) status = `<span class="pill na">${q.error||'ไม่พร้อม'}</span>`;
-    else { if (q.stale) status += `<span class="pill stale">ค่าประมาณ/เก่า</span> `; if (r.spreadModeled) status += `<span class="pill model">สเปรดจำลอง</span>`; if (!status) status = `<span class="pill model">สด</span>`; }
+    else if (q.stale) status = `<span class="pill stale">ค่าประมาณ (NAV)</span>`;
+    else if (r.mid) status = `<span class="pill model">ราคาตลาด</span>`;
+    else status = `<span class="pill" style="color:var(--good)">สด (2 ฝั่งจริง)</span>`;
     const nm = r.url ? `<a href="${r.url}" target="_blank" rel="noopener">${r.name}</a>` : r.name;
     const prem = state.side==='buy'?r.prem:r.premSell;
     const act = r.url ? `<a class="btn" href="${r.url}" target="_blank" rel="noopener">ซื้อ-ขาย →</a>` : '';
@@ -261,7 +264,7 @@ function render() {
       <td class="num ${pickCol==='bid'?'pick':''}">${fmt(r.bid)}</td>
       <td class="num ${pickCol==='ask'?'pick':''}">${fmt(r.ask)}</td>
       <td class="num ${premCls(prem)}">${pct(prem)}</td>
-      <td class="num">${pct(r.spread)}</td>
+      <td class="num">${r.mid ? '–' : pct(r.spread)}</td>
       <td>${status}</td>
       <td class="act">${act}</td>
     </tr>`;

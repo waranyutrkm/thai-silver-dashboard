@@ -29,7 +29,6 @@ export interface Instrument {
   symbol?: string; // สัญลักษณ์ Yahoo (ถ้า source=yahoo)
   ozPerShare?: number; // ทรอยออนซ์เงินต่อหุ้น (ETF)
   contractOz?: number; // ขนาดสัญญา (futures) ใช้ตอนคิด notional
-  modeledSpreadPct?: number; // spread จำลอง (paper asset ที่ไม่มี bid/ask จริง)
   navProxy?: boolean; // ETF: ประมาณราคา = NAV (spot×ozPerShare) เพราะยังไม่มี feed ตลาดจริง
   expenseRatio?: number; // ETF: ค่าธรรมเนียมรายปี (แสดงเป็น note)
   url?: string; // ลิงก์อ้างอิง
@@ -80,8 +79,8 @@ export interface NormalizedRow {
   vatApplicable: boolean;
   premiumBuy: number | null; // askBaseEff / spotBase - 1
   premiumSell: number | null; // bidBaseEff / spotBase - 1
-  spreadPct: number | null; // (ask-bid)/bid
-  spreadModeled: boolean;
+  spreadPct: number | null; // (ask-bid)/bid — null ถ้าเป็นราคาตลาดค่าเดียว
+  mid: boolean; // true = ราคาตลาดจริงค่าเดียว (ไม่มี bid/ask สองฝั่ง เช่น spot/ETF/COMEX)
   native: RawQuote; // ราคาดิบ + สถานะ
 }
 

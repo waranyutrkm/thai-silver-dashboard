@@ -48,24 +48,20 @@ function round(n: number | null, d = 4): number | null {
 }
 
 /**
- * เติม bid/ask ให้ครบ:
- * - ถ้ามี bid/ask จริง (ฟิสิคัลที่ scrape มา) ใช้เลย
- * - ถ้ามีแต่ last (paper) → จำลอง bid/ask = last ± spread/2
+ * เติม bid/ask:
+ * - มี bid/ask จริง (ร้านฟิสิคัล + TFEX) → ใช้เลย (mid=false, มีสเปรดจริง)
+ * - มีแต่ last (spot/ETF/COMEX) → ราคาตลาดค่าเดียว bid=ask=last (mid=true, ไม่มีสเปรดปลอม)
  */
 function resolveBidAsk(
   q: RawQuote,
-  inst: Instrument,
-): { bid: number | null; ask: number | null; modeled: boolean } {
+): { bid: number | null; ask: number | null; mid: boolean } {
   if (q.bid != null && q.ask != null) {
-    return { bid: q.bid, ask: q.ask, modeled: false };
+    return { bid: q.bid, ask: q.ask, mid: false };
   }
-  if (q.last != null && inst.modeledSpreadPct != null) {
-    const half = (inst.modeledSpreadPct * q.last) / 2;
-    return { bid: q.last - half, ask: q.last + half, modeled: true };
+  if (q.last != null) {
+    return { bid: q.last, ask: q.last, mid: true };
   }
-  // มีแต่ last ไม่มี spread → ใช้ last ทั้งสองฝั่ง
-  if (q.last != null) return { bid: q.last, ask: q.last, modeled: true };
-  return { bid: q.bid ?? null, ask: q.ask ?? null, modeled: false };
+  return { bid: null, ask: null, mid: false };
 }
 
 /**
@@ -92,13 +88,13 @@ export function normalizeOne(
     premiumBuy: null,
     premiumSell: null,
     spreadPct: null,
-    spreadModeled: false,
+    mid: false,
     native: q,
   };
 
   if (!q.ok) return base;
 
-  const { bid, ask, modeled } = resolveBidAsk(q, inst);
+  const { bid, ask, mid } = resolveBidAsk(q);
   const ctx = { fx: market.fx };
 
   const bidBase = bid != null ? toBase(bid, inst, ctx) : null;
@@ -122,10 +118,10 @@ export function normalizeOne(
       ? round(bidBaseEff / market.spotBase - 1, 4)
       : null;
   base.spreadPct =
-    bidBase != null && askBase != null && bidBase > 0
+    !mid && bidBase != null && askBase != null && bidBase > 0
       ? round((askBase - bidBase) / bidBase, 4)
       : null;
-  base.spreadModeled = modeled;
+  base.mid = mid;
 
   return base;
 }

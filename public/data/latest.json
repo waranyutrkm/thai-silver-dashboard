@@ -1,10 +1,10 @@
 {
-  "ts": 1788681603544,
+  "ts": 1788681712080,
   "market": {
     "spotUsdOz": 66.2193,
     "fx": 32.92,
     "spotBase": 70.0866777697341,
-    "ts": 1788681603544,
+    "ts": 1788681712080,
     "spotChangePct": -0.013431,
     "spotSource": "goldprice.org",
     "fxSource": "frankfurter.app",
@@ -25,12 +25,13 @@
       "vatApplicable": false,
       "premiumBuy": 0,
       "premiumSell": 0,
-      "spreadPct": 0,
+      "spreadPct": null,
+      "mid": true,
       "native": {
         "id": "spot_xag",
         "last": 66.2193,
         "currency": "USD",
-        "ts": 1788681565401,
+        "ts": 1788681695411,
         "ok": true
       }
     },
@@ -48,6 +49,7 @@
       "premiumBuy": 0.0045,
       "premiumSell": 0.0041,
       "spreadPct": 0.0005,
+      "mid": false,
       "native": {
         "id": "tfex_svf",
         "bid": 66.49,
@@ -71,7 +73,8 @@
       "vatApplicable": false,
       "premiumBuy": 0.008,
       "premiumSell": 0.008,
-      "spreadPct": 0,
+      "spreadPct": null,
+      "mid": true,
       "native": {
         "id": "comex_si",
         "last": 66.748,
@@ -93,7 +96,8 @@
       "vatApplicable": false,
       "premiumBuy": -0.0029,
       "premiumSell": -0.0029,
-      "spreadPct": 0,
+      "spreadPct": null,
+      "mid": true,
       "native": {
         "id": "etf_slv",
         "last": 59.82,
@@ -115,7 +119,8 @@
       "vatApplicable": false,
       "premiumBuy": -0.001,
       "premiumSell": -0.001,
-      "spreadPct": 0,
+      "spreadPct": null,
+      "mid": true,
       "native": {
         "id": "etf_sivr",
         "last": 62.91,
@@ -138,12 +143,13 @@
       "premiumBuy": 0.0039,
       "premiumSell": -0.0175,
       "spreadPct": 0.0218,
+      "mid": false,
       "native": {
         "id": "bowins_1kg",
         "bid": 68850,
         "ask": 70350,
         "currency": "THB",
-        "ts": 1788681604598,
+        "ts": 1788681712313,
         "ok": true
       }
     },
@@ -161,6 +167,7 @@
       "premiumBuy": 0.0166,
       "premiumSell": -0.0536,
       "spreadPct": 0.0742,
+      "mid": false,
       "native": {
         "id": "thongsuay_grain",
         "bid": 1011,

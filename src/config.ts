@@ -28,7 +28,6 @@ export const INSTRUMENTS: Instrument[] = [
     unit: 'usd_oz',
     purity: 0.9999,
     vatApplicable: false,
-    modeledSpreadPct: 0.0005,
     url: 'https://www.gold-api.com/',
     note: 'ราคาอ้างอิงตลาดโลก — เส้น benchmark',
   },
@@ -53,7 +52,6 @@ export const INSTRUMENTS: Instrument[] = [
     purity: 0.999,
     vatApplicable: false,
     contractOz: 5000,
-    modeledSpreadPct: 0.0006,
     url: 'https://finance.yahoo.com/quote/SI=F',
     note: 'ฟิวเจอร์สเงินตลาดโลก (COMEX) · เดือนใกล้สุด',
   },
@@ -68,7 +66,6 @@ export const INSTRUMENTS: Instrument[] = [
     ozPerShare: 0.906, // ⚠️ verify: iShares "silver per share"
     navProxy: true, // fallback ถ้าดึงราคาตลาดจริงไม่ได้
     expenseRatio: 0.005,
-    modeledSpreadPct: 0.0006,
     url: 'https://www.ishares.com/us/products/239855/',
     note: 'ETF อิงเงินจริง · ค่าธรรมเนียม 0.50%/ปี · ซื้อผ่านโบรกหุ้น US',
   },
@@ -83,7 +80,6 @@ export const INSTRUMENTS: Instrument[] = [
     ozPerShare: 0.951, // ⚠️ verify: abrdn "metal per share"
     navProxy: true,
     expenseRatio: 0.003,
-    modeledSpreadPct: 0.0008,
     url: 'https://www.abrdn.com/en-us/investor/products/etfs/sivr',
     note: 'ETF อิงเงินจริง · ค่าธรรมเนียม 0.30%/ปี · ซื้อผ่านโบรกหุ้น US',
   },

@@ -77,15 +77,16 @@ ok(
   withVat.bidBaseEff === withVat.bidBase,
 );
 
-// 6) paper spread จำลอง
+// 6) paper (last อย่างเดียว) → ราคาตลาดค่าเดียว: mid=true, bid=ask, ไม่มีสเปรด
 const paperQ: RawQuote = { id: 'x', last: SPOT_USD, ok: true };
-const paperRow = normalizeOne(
-  { ...spotInst, modeledSpreadPct: 0.001 } as Instrument,
-  paperQ,
-  market,
-  false,
-);
-ok('paper: spreadModeled = true', paperRow.spreadModeled === true);
-ok('paper: ask > bid', paperRow.askBase! > paperRow.bidBase!);
+const paperRow = normalizeOne(spotInst, paperQ, market, false);
+ok('paper: mid = true', paperRow.mid === true);
+ok('paper: bid = ask (ไม่มีสเปรดปลอม)', paperRow.askBase === paperRow.bidBase);
+ok('paper: spreadPct = null', paperRow.spreadPct === null);
+
+// 7) ร้าน (มี bid/ask จริง) → mid=false, มีสเปรดจริง
+const dealerRow = normalizeOne(kgInst, q, market, false);
+ok('dealer: mid = false', dealerRow.mid === false);
+ok('dealer: spreadPct > 0', (dealerRow.spreadPct ?? 0) > 0);
 
 console.log(`\n✅ ผ่านทั้งหมด ${pass} เคส`);
