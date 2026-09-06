@@ -7,6 +7,7 @@ import { fetchBowins1kg } from './sources/bowins';
 import { fetchViaBrowser, type BrowserQuotes } from './sources/browser';
 import { fetchUsdThb } from './sources/fx';
 import { fetchSilverSpot } from './sources/metals';
+import { fetchThongsuayGrain } from './sources/thongsuay';
 import type { MarketContext, RawQuote, Snapshot } from './types';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -26,10 +27,11 @@ export async function refresh(opts: { useBrowser?: boolean } = {}): Promise<Cach
   const useBrowser = opts.useBrowser ?? true;
   const now = Date.now();
 
-  const [spotR, fxR, bowinsR, browserR] = await Promise.allSettled([
+  const [spotR, fxR, bowinsR, thongsuayR, browserR] = await Promise.allSettled([
     fetchSilverSpot(),
     fetchUsdThb(),
     fetchBowins1kg(),
+    fetchThongsuayGrain(),
     useBrowser
       ? fetchViaBrowser(['SLV', 'SIVR', 'SI=F'])
       : Promise.resolve({ yahoo: {}, ok: false, error: 'ปิด browser (CI)' } as BrowserQuotes),
@@ -41,6 +43,10 @@ export async function refresh(opts: { useBrowser?: boolean } = {}): Promise<Cach
     bowinsR.status === 'fulfilled'
       ? bowinsR.value
       : { id: 'bowins_1kg', ok: false, error: 'ดึงไม่สำเร็จ' };
+  const thongsuay: RawQuote =
+    thongsuayR.status === 'fulfilled'
+      ? thongsuayR.value
+      : { id: 'thongsuay_grain', ok: false, error: 'ดึงไม่สำเร็จ' };
   const browser: BrowserQuotes =
     browserR.status === 'fulfilled'
       ? browserR.value
@@ -110,6 +116,9 @@ export async function refresh(opts: { useBrowser?: boolean } = {}): Promise<Cach
 
       case 'bowins_1kg':
         return bowins;
+
+      case 'thongsuay_grain':
+        return thongsuay;
 
       default:
         return { id: inst.id, ok: false, error: 'ไม่มีข้อมูล' };

@@ -1,10 +1,10 @@
 {
-  "ts": 1788680403019,
+  "ts": 1788680596401,
   "market": {
     "spotUsdOz": 66.2193,
     "fx": 32.92,
     "spotBase": 70.0866777697341,
-    "ts": 1788680403019,
+    "ts": 1788680596401,
     "spotChangePct": -0.013431,
     "spotSource": "goldprice.org",
     "fxSource": "frankfurter.app",
@@ -31,7 +31,7 @@
         "id": "spot_xag",
         "last": 66.2193,
         "currency": "USD",
-        "ts": 1788680375269,
+        "ts": 1788680565292,
         "ok": true
       }
     },
@@ -149,7 +149,31 @@
         "bid": 68850,
         "ask": 70350,
         "currency": "THB",
-        "ts": 1788680403247,
+        "ts": 1788680596550,
+        "ok": true
+      }
+    },
+    {
+      "id": "thongsuay_grain",
+      "name": "ทองสวย เม็ดเงิน (99.99%)",
+      "type": "physical_grain",
+      "url": "https://www.thongsuay.co.th/silver-grains",
+      "note": "เม็ดเงิน · รับซื้อ/ขาย · ราคาโดยประมาณ ยังไม่รวม VAT (กดปุ่ม VAT เพื่อรวม)",
+      "bidBase": 66.3278,
+      "askBase": 71.2483,
+      "askBaseEff": 71.2483,
+      "bidBaseEff": 66.3278,
+      "vatApplicable": true,
+      "premiumBuy": 0.0166,
+      "premiumSell": -0.0536,
+      "spreadPct": 0.0742,
+      "spreadModeled": false,
+      "native": {
+        "id": "thongsuay_grain",
+        "bid": 1011,
+        "ask": 1086,
+        "currency": "THB",
+        "ts": 1788576305116,
         "ok": true
       }
     }

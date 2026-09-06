@@ -98,4 +98,15 @@ export const INSTRUMENTS: Instrument[] = [
     url: 'https://www.bowinsgroup.com/th/silver-price',
     note: 'ร้านจริง · รับซื้อ/ขายออก · ขายออกยังไม่รวม VAT 7% (กดปุ่ม VAT เพื่อรวม)',
   },
+  {
+    id: 'thongsuay_grain',
+    name: 'ทองสวย เม็ดเงิน (99.99%)',
+    type: 'physical_grain',
+    source: 'scraper',
+    unit: 'thb_baht', // API ให้ราคาต่อน้ำหนักบาท (15.244 ก.)
+    purity: 0.9999,
+    vatApplicable: true,
+    url: 'https://www.thongsuay.co.th/silver-grains',
+    note: 'เม็ดเงิน · รับซื้อ/ขาย · ราคาโดยประมาณ ยังไม่รวม VAT (กดปุ่ม VAT เพื่อรวม)',
+  },
 ];
