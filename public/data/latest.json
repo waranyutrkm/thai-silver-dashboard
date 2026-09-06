@@ -1,10 +1,10 @@
 {
-  "ts": 1788688801681,
+  "ts": 1788690001986,
   "market": {
     "spotUsdOz": 66.2193,
     "fx": 32.92,
     "spotBase": 70.0866777697341,
-    "ts": 1788688801681,
+    "ts": 1788690001986,
     "spotChangePct": -0.013431,
     "spotSource": "goldprice.org",
     "fxSource": "frankfurter.app",
@@ -27,11 +27,13 @@
       "premiumSell": 0,
       "spreadPct": null,
       "mid": true,
+      "feeBuyOncePct": 0,
+      "feeAnnualPct": 0,
       "native": {
         "id": "spot_xag",
         "last": 66.2193,
         "currency": "USD",
-        "ts": 1788688785015,
+        "ts": 1788689975115,
         "ok": true
       }
     },
@@ -40,7 +42,7 @@
       "name": "TFEX Silver Online Futures",
       "type": "futures",
       "url": "https://www.tfex.co.th/en/products/precious-metal/silver-online-futures/market-data",
-      "note": "ฟิวเจอร์สเงินในไทย (ในกำกับ ก.ล.ต.) · ดีเลย์ 15 นาที · เดือนใกล้สุด",
+      "note": "ฟิวเจอร์สเงินในไทย (ในกำกับ ก.ล.ต.) · ดีเลย์ 15 นาที · เดือนใกล้สุด · มี contango เวลาถือยาว",
       "bidBase": 70.3732,
       "askBase": 70.4049,
       "askBaseEff": 70.4049,
@@ -50,6 +52,8 @@
       "premiumSell": 0.0041,
       "spreadPct": 0.0005,
       "mid": false,
+      "feeBuyOncePct": 0.0015,
+      "feeAnnualPct": 0.07,
       "native": {
         "id": "tfex_svf",
         "bid": 66.49,
@@ -65,7 +69,7 @@
       "name": "COMEX Silver Futures (SI=F)",
       "type": "futures",
       "url": "https://finance.yahoo.com/quote/SI=F",
-      "note": "ฟิวเจอร์สเงินตลาดโลก (COMEX) · เดือนใกล้สุด",
+      "note": "ฟิวเจอร์สเงินตลาดโลก (COMEX) · เดือนใกล้สุด · มี contango เวลาถือยาว",
       "bidBase": 70.6463,
       "askBase": 70.6463,
       "askBaseEff": 70.6463,
@@ -75,6 +79,8 @@
       "premiumSell": 0.008,
       "spreadPct": null,
       "mid": true,
+      "feeBuyOncePct": 0.006,
+      "feeAnnualPct": 0.06,
       "native": {
         "id": "comex_si",
         "last": 66.748,
@@ -98,6 +104,8 @@
       "premiumSell": -0.0029,
       "spreadPct": null,
       "mid": true,
+      "feeBuyOncePct": 0.007,
+      "feeAnnualPct": 0.005,
       "native": {
         "id": "etf_slv",
         "last": 59.82,
@@ -121,6 +129,8 @@
       "premiumSell": -0.001,
       "spreadPct": null,
       "mid": true,
+      "feeBuyOncePct": 0.007,
+      "feeAnnualPct": 0.003,
       "native": {
         "id": "etf_sivr",
         "last": 62.91,
@@ -144,12 +154,14 @@
       "premiumSell": -0.0175,
       "spreadPct": 0.0218,
       "mid": false,
+      "feeBuyOncePct": 0,
+      "feeAnnualPct": 0,
       "native": {
         "id": "bowins_1kg",
         "bid": 68850,
         "ask": 70350,
         "currency": "THB",
-        "ts": 1788688802048,
+        "ts": 1788690002211,
         "ok": true
       }
     },
@@ -168,6 +180,8 @@
       "premiumSell": -0.0536,
       "spreadPct": 0.0742,
       "mid": false,
+      "feeBuyOncePct": 0,
+      "feeAnnualPct": 0,
       "native": {
         "id": "thongsuay_grain",
         "bid": 1011,
