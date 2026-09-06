@@ -1,10 +1,10 @@
 {
-  "ts": 1788700802784,
+  "ts": 1788709202523,
   "market": {
     "spotUsdOz": 66.2193,
     "fx": 32.92,
     "spotBase": 70.0866777697341,
-    "ts": 1788700802784,
+    "ts": 1788709202523,
     "spotChangePct": -0.013431,
     "spotSource": "goldprice.org",
     "fxSource": "frankfurter.app",
@@ -33,7 +33,7 @@
         "id": "spot_xag",
         "last": 66.2193,
         "currency": "USD",
-        "ts": 1788700795993,
+        "ts": 1788709175758,
         "ok": true
       }
     },
@@ -70,21 +70,23 @@
       "type": "futures",
       "url": "https://finance.yahoo.com/quote/SI=F",
       "note": "ฟิวเจอร์สเงินตลาดโลก (COMEX) · เดือนใกล้สุด · มี contango เวลาถือยาว",
-      "bidBase": null,
-      "askBase": null,
-      "askBaseEff": null,
-      "bidBaseEff": null,
+      "bidBase": 70.6463,
+      "askBase": 70.6463,
+      "askBaseEff": 70.6463,
+      "bidBaseEff": 70.6463,
       "vatApplicable": false,
-      "premiumBuy": null,
-      "premiumSell": null,
+      "premiumBuy": 0.008,
+      "premiumSell": 0.008,
       "spreadPct": null,
-      "mid": false,
+      "mid": true,
       "feeBuyOncePct": 0.006,
       "feeAnnualPct": 0.06,
       "native": {
         "id": "comex_si",
-        "ok": false,
-        "error": "ดึง Yahoo SI=F ไม่ได้"
+        "last": 66.748,
+        "currency": "USD",
+        "ts": 1788555595000,
+        "ok": true
       }
     },
     {
@@ -93,24 +95,23 @@
       "type": "etf",
       "url": "https://www.ishares.com/us/products/239855/",
       "note": "ETF อิงเงินจริง · ค่าธรรมเนียม 0.50%/ปี · ซื้อผ่านโบรกหุ้น US",
-      "bidBase": 70.0867,
-      "askBase": 70.0867,
-      "askBaseEff": 70.0867,
-      "bidBaseEff": 70.0867,
+      "bidBase": 69.8826,
+      "askBase": 69.8826,
+      "askBaseEff": 69.8826,
+      "bidBaseEff": 69.8826,
       "vatApplicable": false,
-      "premiumBuy": 0,
-      "premiumSell": 0,
+      "premiumBuy": -0.0029,
+      "premiumSell": -0.0029,
       "spreadPct": null,
       "mid": true,
       "feeBuyOncePct": 0.007,
       "feeAnnualPct": 0.005,
       "native": {
         "id": "etf_slv",
-        "last": 59.994685800000006,
+        "last": 59.82,
         "currency": "USD",
-        "ts": 1788700795993,
-        "ok": true,
-        "stale": true
+        "ts": 1788552000000,
+        "ok": true
       }
     },
     {
@@ -119,24 +120,23 @@
       "type": "etf",
       "url": "https://www.abrdn.com/en-us/investor/products/etfs/sivr",
       "note": "ETF อิงเงินจริง · ค่าธรรมเนียม 0.30%/ปี · ซื้อผ่านโบรกหุ้น US",
-      "bidBase": 70.0867,
-      "askBase": 70.0867,
-      "askBaseEff": 70.0867,
-      "bidBaseEff": 70.0867,
+      "bidBase": 70.0148,
+      "askBase": 70.0148,
+      "askBaseEff": 70.0148,
+      "bidBaseEff": 70.0148,
       "vatApplicable": false,
-      "premiumBuy": 0,
-      "premiumSell": 0,
+      "premiumBuy": -0.001,
+      "premiumSell": -0.001,
       "spreadPct": null,
       "mid": true,
       "feeBuyOncePct": 0.007,
       "feeAnnualPct": 0.003,
       "native": {
         "id": "etf_sivr",
-        "last": 62.9745543,
+        "last": 62.91,
         "currency": "USD",
-        "ts": 1788700795993,
-        "ok": true,
-        "stale": true
+        "ts": 1788552000000,
+        "ok": true
       }
     },
     {
@@ -161,7 +161,7 @@
         "bid": 68850,
         "ask": 70350,
         "currency": "THB",
-        "ts": 1788700802945,
+        "ts": 1788709202762,
         "ok": true
       }
     },
