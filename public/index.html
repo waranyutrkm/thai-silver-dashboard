@@ -123,10 +123,10 @@
         <thead>
           <tr>
             <th class="static">แหล่ง / instrument</th>
-            <th data-sort="bid">รับซื้อ (ขายได้) <span class="arrow"></span></th>
-            <th data-sort="ask"><span id="askLabel">ขายออก (ซื้อจ่าย)</span> <span class="arrow"></span></th>
+            <th data-sort="bid">รับซื้อสุทธิ (ขายได้) <span class="arrow"></span></th>
+            <th data-sort="ask"><span id="askLabel">ขายออกสุทธิ (ซื้อจ่าย)</span> <span class="arrow"></span></th>
             <th data-sort="prem">พรีเมียม <span class="arrow"></span></th>
-            <th data-sort="spread">สเปรด <span class="arrow"></span></th>
+            <th class="static">ค่าธรรมเนียมซื้อ/ขาย</th>
             <th class="static">สถานะ</th>
             <th class="static">ซื้อ-ขาย</th>
           </tr>
@@ -135,7 +135,7 @@
       </table>
     </div>
   </div>
-  <p class="note">หน่วยราคา = บาท/กรัมเนื้อเงินบริสุทธิ์ · พรีเมียมเทียบ spot · แถวเหลือง = ราคาอ้างอิงตลาดโลก · กด “ซื้อ-ขาย” เพื่อไปเว็บผู้ให้บริการ<br>
+  <p class="note">หน่วยราคา = บาท/กรัมเนื้อเงินบริสุทธิ์ · <b>รับซื้อ/ขายออก = ราคาสุทธิต่อครั้ง</b> (ขายออก = รวม VAT+คอม+FX ที่คุณจ่ายจริง · รับซื้อ = หักค่าธรรมเนียมขายแล้วที่คุณได้จริง) — ชี้เมาส์ที่ราคาเพื่อดูที่มา · พรีเมียมเทียบ spot · แถวเหลือง = ราคาอ้างอิงตลาดโลก<br>
   <b>ราคาตลาด (ค่าเดียว)</b> = แหล่งให้ราคามาค่าเดียว (spot/ETF/ฟิวเจอร์ส) — ซื้อ≈ขาย, ส่วนต่างจริงคือค่าคอมโบรก · <b>ซื้อ-ขาย 2 ฝั่ง</b> = ร้าน/TFEX ให้ราคารับซื้อ-ขายออกจริงแยกกัน (มีสเปรด)<br>
   ทั้งคู่คือ “ค่าล่าสุดที่มี” — แต่ความสดต่างกันตามแหล่ง: spot เรียลไทม์ · TFEX ดีเลย์ 15 นาที · ETF/COMEX = ราคาปิดตลาดสหรัฐฯ · ร้าน = อัปเดตเป็นรอบ/วัน (ชี้เมาส์ที่สถานะเพื่อดูเวลาอัปเดต)<br>
   <b>รวมค่าธรรมเนียม (all-in)</b> = บวกค่าคอม/FX (ครั้งเดียว) + ค่าธรรมเนียมรายปี×ปีที่ถือ (ETF expense ratio, ฟิวเจอร์ส contango) — ค่าธรรมเนียม<b>โดยประมาณ</b> ชี้เมาส์ที่ช่องราคาเพื่อดูที่มา · ฟิสิคัลไม่มีค่าถือครองรายปี (ยิ่งถือนานยิ่งได้เปรียบ)</p>
@@ -207,20 +207,23 @@ const fmt = (n,d=2) => n==null||!isFinite(n) ? '–' : n.toLocaleString('th-TH',
 const pct = (n) => n==null||!isFinite(n) ? '–' : (n*100).toLocaleString('th-TH',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';
 const premCls = (v)=> v==null?'':(v>=0?'prem-pos':'prem-neg');
 
-// คำนวณค่าที่ขึ้นกับ VAT + ค่าธรรมเนียม ฝั่ง client (จาก bidBase/askBase ดิบใน snapshot)
+// คำนวณราคา "สุทธิ" ต่อครั้ง (รวม VAT + ค่าธรรมเนียมซื้อขาย) ฝั่ง client จาก bidBase/askBase ดิบ
 function derive(r, spotBase) {
   const vatMult = state.vat && r.vatApplicable ? 1+VAT : 1;
-  const askEff = r.askBase!=null ? r.askBase*vatMult : null;  // ราคาซื้อ (+VAT ถ้าเปิด)
-  const bid = r.bidBase;                                      // ฝั่งขาย (ร้านรับซื้อ) ไม่บวก VAT
-  // all-in = ราคา + ค่าคอม/FX (ครั้งเดียว) + ค่าธรรมเนียมรายปี × ปีที่ถือ
   const yrs = state.years || 0;
-  const askAllin = askEff!=null
-    ? askEff*(1+(r.feeBuyOncePct||0)) + askEff*(r.feeAnnualPct||0)*yrs : null;
-  const ask = state.allin ? askAllin : askEff;
+  // ต้นทุนซื้อสุทธิ/กรัม = ราคา × (VAT ถ้าฟิสิคัล) × (1 + คอมซื้อ + FX)
+  const askNet = r.askBase!=null ? r.askBase*vatMult*(1+(r.feeBuyOncePct||0)) : null;
+  // เงินได้รับสุทธิ/กรัม = ราคารับซื้อ × (1 − คอมขาย − FX)  (ฟิสิคัลขายคืนไม่มี VAT)
+  const bidNet = r.bidBase!=null ? r.bidBase*(1-(r.feeSellOncePct||0)) : null;
+  // all-in = ซื้อสุทธิ + ค่าถือครองรายปี × ปีที่ถือ
+  const askAllin = askNet!=null ? askNet*(1+(r.feeAnnualPct||0)*yrs) : null;
+  const ask = state.allin ? askAllin : askNet;
   return {
-    ...r, ask, askEff, askAllin, bid,
+    ...r, ask, askNet, askAllin, bid: bidNet,
+    buyCostPct: r.askBase!=null ? (askNet/r.askBase - 1) : null,   // รวม VAT+คอม+FX เทียบราคาดิบ
+    sellCostPct: r.feeSellOncePct||0,                              // ถูกหักตอนขาย
     prem: ask!=null && spotBase>0 ? ask/spotBase-1 : null,
-    premSell: bid!=null && spotBase>0 ? bid/spotBase-1 : null,
+    premSell: bidNet!=null && spotBase>0 ? bidNet/spotBase-1 : null,
     spread: (!r.mid && r.bidBase!=null && r.askBase!=null && r.bidBase>0) ? (r.askBase-r.bidBase)/r.bidBase : null,
   };
 }
@@ -269,18 +272,23 @@ function render() {
     const nm = r.url ? `<a href="${r.url}" target="_blank" rel="noopener">${r.name}</a>` : r.name;
     const prem = state.side==='buy'?r.prem:r.premSell;
     const act = r.url ? `<a class="btn" href="${r.url}" target="_blank" rel="noopener">ซื้อ-ขาย →</a>` : '';
+    let askTip = r.askBase!=null ? ('ราคาขายร้าน '+fmt(r.askBase)+(state.vat&&r.vatApplicable?' +VAT7%':'')+' + คอม/FX '+((r.feeBuyOncePct||0)*100).toFixed(2)+'%') : '';
+    if (state.allin && r.askNet!=null) askTip += ' + ถือครอง '+((r.feeAnnualPct||0)*100).toFixed(2)+'%×'+state.years+'ปี';
+    if (r.askBase!=null) askTip += ' = สุทธิ '+fmt(r.ask);
+    const bidTip = r.bidBase!=null ? ('ราคารับซื้อร้าน '+fmt(r.bidBase)+' − ค่าธรรมเนียมขาย '+((r.sellCostPct||0)*100).toFixed(2)+'% = สุทธิ '+fmt(r.bid)) : '';
+    const feeCell = r.buyCostPct!=null ? `<span class="prem-pos">+${(r.buyCostPct*100).toFixed(1)}%</span> / <span class="prem-neg">−${((r.sellCostPct||0)*100).toFixed(1)}%</span>` : '–';
     return `<tr class="${r.type==='spot'?'bench':''} ${r.id===bestId?'best':''}">
       <td><div class="name">${nm}</div><span class="tag">${TYPE_LABELS[r.type]||r.type}</span>${r.vatApplicable?' <span class="tag">VAT</span>':''}</td>
-      <td class="num ${pickCol==='bid'?'pick':''}">${fmt(r.bid)}</td>
-      <td class="num ${pickCol==='ask'?'pick':''}" title="${state.allin&&r.askEff!=null?('ราคา '+fmt(r.askEff)+' + คอม/FX '+((r.feeBuyOncePct||0)*100).toFixed(2)+'% + รายปี '+((r.feeAnnualPct||0)*100).toFixed(2)+'%×'+state.years+'ปี = '+fmt(r.ask)):''}">${fmt(r.ask)}</td>
+      <td class="num ${pickCol==='bid'?'pick':''}" title="${bidTip}">${fmt(r.bid)}</td>
+      <td class="num ${pickCol==='ask'?'pick':''}" title="${askTip}">${fmt(r.ask)}</td>
       <td class="num ${premCls(prem)}">${pct(prem)}</td>
-      <td class="num">${r.mid ? '–' : pct(r.spread)}</td>
+      <td class="num" title="ต้นทุนซื้อขายต่อครั้ง (ซื้อรวม VAT+คอม+FX / ขายหักคอม+FX)">${feeCell}</td>
       <td>${status}</td>
       <td class="act">${act}</td>
     </tr>`;
   }).join('');
   updateArrows();
-  $('#askLabel').textContent = state.allin ? `ต้นทุน all-in (ถือ ${state.years} ปี)` : 'ขายออก (ซื้อจ่าย)';
+  $('#askLabel').textContent = state.allin ? `ต้นทุนสุทธิ all-in (ถือ ${state.years} ปี)` : 'ขายออกสุทธิ (ซื้อจ่าย)';
 
   $('#channels').innerHTML = CHANNELS.map(c => `<div class="chcard">
     <div class="ty">${c.g}</div><h3>${c.name}</h3><div class="ty">${c.ty}</div>

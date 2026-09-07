@@ -31,8 +31,9 @@ export interface Instrument {
   contractOz?: number; // ขนาดสัญญา (futures) ใช้ตอนคิด notional
   navProxy?: boolean; // ETF: ประมาณราคา = NAV (spot×ozPerShare) เพราะยังไม่มี feed ตลาดจริง
   // ── ค่าธรรมเนียม (โดยประมาณ ปรับได้) ─────────────────────────────
-  feeBuyPct?: number; // ค่าคอมตอนซื้อ (ครั้งเดียว) เช่น 0.002 = 0.2%
-  feeFxPct?: number; // ค่าแปลงเงิน FX markup (ครั้งเดียว, สินทรัพย์ตปท.)
+  feeBuyPct?: number; // ค่าคอมตอนซื้อ (ต่อครั้ง) เช่น 0.002 = 0.2%
+  feeSellPct?: number; // ค่าคอมตอนขาย (ต่อครั้ง)
+  feeFxPct?: number; // ค่าแปลงเงิน FX markup (คิดทั้งขาซื้อและขาย, สินทรัพย์ตปท.)
   feeAnnualPct?: number; // ค่าธรรมเนียมรายปี: ETF=expense ratio, futures=contango/carry
   url?: string; // ลิงก์อ้างอิง
   note?: string;
@@ -84,7 +85,8 @@ export interface NormalizedRow {
   premiumSell: number | null; // bidBaseEff / spotBase - 1
   spreadPct: number | null; // (ask-bid)/bid — null ถ้าเป็นราคาตลาดค่าเดียว
   mid: boolean; // true = ราคาตลาดจริงค่าเดียว (ไม่มี bid/ask สองฝั่ง เช่น spot/ETF/COMEX)
-  feeBuyOncePct: number; // ค่าธรรมเนียมครั้งเดียวตอนซื้อ (คอม + FX)
+  feeBuyOncePct: number; // ค่าธรรมเนียมต่อครั้งตอนซื้อ (คอม + FX)
+  feeSellOncePct: number; // ค่าธรรมเนียมต่อครั้งตอนขาย (คอม + FX)
   feeAnnualPct: number; // ค่าธรรมเนียมรายปี (expense ratio / contango)
   native: RawQuote; // ราคาดิบ + สถานะ
 }

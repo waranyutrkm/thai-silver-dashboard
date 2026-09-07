@@ -41,6 +41,7 @@ export const INSTRUMENTS: Instrument[] = [
     vatApplicable: false,
     contractOz: 300, // priceQuotationFactor 3000 / tick — สัญญาอิง USD/oz (ดูสเปก TFEX)
     feeBuyPct: 0.0015, // ค่าคอม/สัญญา + ค่าธรรมเนียมตลาด + VAT บนคอม (โดยประมาณ)
+    feeSellPct: 0.0015, // ค่าคอมตอนปิดสัญญา
     feeAnnualPct: 0.07, // contango/ต้นทุน roll ~7%/ปี (จากส่วนต่างเดือนใกล้-ไกลจริง)
     url: 'https://www.tfex.co.th/en/products/precious-metal/silver-online-futures/market-data',
     note: 'ฟิวเจอร์สเงินในไทย (ในกำกับ ก.ล.ต.) · ดีเลย์ 15 นาที · เดือนใกล้สุด · มี contango เวลาถือยาว',
@@ -55,7 +56,8 @@ export const INSTRUMENTS: Instrument[] = [
     vatApplicable: false,
     contractOz: 5000,
     feeBuyPct: 0.001,
-    feeFxPct: 0.005, // เทรดผ่านโบรก ตปท. มี FX
+    feeSellPct: 0.001,
+    feeFxPct: 0.005, // เทรดผ่านโบรก ตปท. มี FX (คิดทั้งซื้อและขาย)
     feeAnnualPct: 0.06, // contango/ต้นทุน roll ~6%/ปี (โดยประมาณ)
     url: 'https://finance.yahoo.com/quote/SI=F',
     note: 'ฟิวเจอร์สเงินตลาดโลก (COMEX) · เดือนใกล้สุด · มี contango เวลาถือยาว',
@@ -71,7 +73,8 @@ export const INSTRUMENTS: Instrument[] = [
     ozPerShare: 0.906, // ⚠️ verify: iShares "silver per share"
     navProxy: true, // fallback ถ้าดึงราคาตลาดจริงไม่ได้
     feeBuyPct: 0.002, // ค่าคอมหุ้น ตปท. ~0.2% (โดยประมาณ)
-    feeFxPct: 0.005, // FX markup แปลงบาท→USD ~0.5%
+    feeSellPct: 0.002, // ค่าคอมตอนขาย ~0.2%
+    feeFxPct: 0.005, // FX markup แปลงบาท↔USD ~0.5% (คิดทั้งขาซื้อและขาย)
     feeAnnualPct: 0.005, // expense ratio 0.50%/ปี
     url: 'https://www.ishares.com/us/products/239855/',
     note: 'ETF อิงเงินจริง · ค่าธรรมเนียม 0.50%/ปี · ซื้อผ่านโบรกหุ้น US',
@@ -87,6 +90,7 @@ export const INSTRUMENTS: Instrument[] = [
     ozPerShare: 0.951, // ⚠️ verify: abrdn "metal per share"
     navProxy: true,
     feeBuyPct: 0.002,
+    feeSellPct: 0.002,
     feeFxPct: 0.005,
     feeAnnualPct: 0.003, // expense ratio 0.30%/ปี
     url: 'https://www.abrdn.com/en-us/investor/products/etfs/sivr',
