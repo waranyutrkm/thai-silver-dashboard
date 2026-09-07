@@ -1,10 +1,10 @@
 {
-  "ts": 1788802802348,
+  "ts": 1788802802347,
   "market": {
     "spotUsdOz": 66.2139,
     "fx": 32.895,
     "spotBase": 70.02774173786257,
-    "ts": 1788802802348,
+    "ts": 1788802802347,
     "spotChangePct": 0.0008,
     "spotSource": "goldprice.org",
     "fxSource": "frankfurter.app",
@@ -34,7 +34,7 @@
         "id": "spot_xag",
         "last": 66.2139,
         "currency": "USD",
-        "ts": 1788802785980,
+        "ts": 1788802796177,
         "ok": true
       }
     },
@@ -44,25 +44,25 @@
       "type": "futures",
       "url": "https://www.tfex.co.th/en/products/precious-metal/silver-online-futures/market-data",
       "note": "ฟิวเจอร์สเงินในไทย (ในกำกับ ก.ล.ต.) · ดีเลย์ 15 นาที · เดือนใกล้สุด · มี contango เวลาถือยาว",
-      "bidBase": 70.3303,
+      "bidBase": 70.362,
       "askBase": 70.4467,
       "askBaseEff": 70.4467,
-      "bidBaseEff": 70.3303,
+      "bidBaseEff": 70.362,
       "vatApplicable": false,
       "premiumBuy": 0.006,
-      "premiumSell": 0.0043,
-      "spreadPct": 0.0017,
+      "premiumSell": 0.0048,
+      "spreadPct": 0.0012,
       "mid": false,
       "feeBuyOncePct": 0.0015,
       "feeSellOncePct": 0.0015,
       "feeAnnualPct": 0.07,
       "native": {
         "id": "tfex_svf",
-        "bid": 66.5,
+        "bid": 66.53,
         "ask": 66.61,
-        "last": 66.56,
+        "last": 66.55,
         "currency": "USD",
-        "ts": 1788801799883,
+        "ts": 1788801889883,
         "ok": true
       }
     },
@@ -167,7 +167,7 @@
         "bid": 68250,
         "ask": 69750,
         "currency": "THB",
-        "ts": 1788802802745,
+        "ts": 1788802802616,
         "ok": true
       }
     },
